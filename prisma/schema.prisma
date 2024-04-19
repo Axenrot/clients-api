@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  email String @unique
+  hash String
+
+  firstName String?
+  lastName String?
+  clients Client[]
+
+  @@map("users")
+}
+
+model Client {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  title Title
+  country Country
+  name String
+  email String @unique
+  address String
+
+  userId Int
+  user User @relation(fields:[userId], references:[id])
+
+  @@map("clients")
+}
+
+enum Title {
+  CEO       // Chief Executive Officer
+  CTO       // Chief Technology Officer
+  Director  // Director
+  Manager   // Manager
+  Engineer  // Engineer
+}
+
+enum Country {
+  USA       // United States of America
+  UK        // United Kingdom
+  Brazil    // Brazil
+  Canada    // Canada
+  Argentina // Argentina
+  Germany   // Germany
+  Mexico    // Mexico
+  Italy     // Italy
+  Spain     // Spain
+  India     // India
+}
