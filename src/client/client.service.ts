@@ -8,10 +8,9 @@ export class ClientService {
   constructor(private prisma: PrismaService) {}
 
   async create(dto: ClientDto) {
-    // generate password hash
-
-    // save user in db
+    console.log("create?");
     try {
+      console.log("trying to create");
       const client = await this.prisma?.client.create({
         data: {
           email: dto.email,
@@ -31,6 +30,7 @@ export class ClientService {
           createdAt: true,
         },
       });
+      console.log(client);
       return client;
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
