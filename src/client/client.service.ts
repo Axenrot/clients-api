@@ -43,6 +43,45 @@ export class ClientService {
     }
   }
 
+  async update(dto: ClientDto, userId: number, clientId: number) {
+    try {
+      const client = await this.prisma?.client.update({
+        where: {
+          id: clientId, // Specify the client to update using its ID
+        },
+        data: {
+          email: dto.email,
+          title: dto.title,
+          country: dto.country,
+          address: dto.address,
+          name: dto.name,
+          userId,
+        },
+        select: {
+          id: true,
+          title: true,
+          country: true,
+          address: true,
+          name: true,
+          email: true,
+          createdAt: true,
+        },
+      });
+
+      return client;
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        if (error.code === "P2002") {
+          throw new ForbiddenException("Client already exists");
+        } else {
+          throw new ForbiddenException(
+            "Something went wrong, please try again",
+          );
+        }
+      }
+    }
+  }
+
   async list(userId: number, offset: number, limit: number) {
     try {
       const clients = await this.prisma?.client.findMany({

@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+} from "@nestjs/common";
 import { ClientService } from "./client.service";
 import { ClientDto } from "./dto";
 import { AuthGuard } from "@nestjs/passport";
@@ -14,6 +23,14 @@ export class ClientController {
     const userId = (req.user as { id: number }).id;
 
     return this.clientService.create(dto, userId);
+  }
+
+  @UseGuards(AuthGuard("jwt"))
+  @Put("update")
+  update(@Body() dto: ClientDto, @Req() req: Request) {
+    const userId = (req.user as { id: number }).id;
+
+    return this.clientService.update(dto, userId, 3);
   }
 
   @UseGuards(AuthGuard("jwt"))
