@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { ClientDto } from "./dto";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { PrismaService } from "src/prisma/prisma.service";
@@ -31,19 +35,18 @@ export class ClientService {
 
       return client;
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
-        if (error.code === "P2002") {
-          throw new ForbiddenException("Client already exists");
-        } else {
-          throw new ForbiddenException(
-            "Something went wrong, please try again",
-          );
-        }
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === "P2002"
+      ) {
+        throw new ForbiddenException("Client already exists");
+      } else {
+        throw new ForbiddenException("Something went wrong, please try again");
       }
     }
   }
 
-  async update(dto: ClientDto, userId: number, clientId: number) {
+  async update(dto: ClientDto, clientId: number, userId: number) {
     try {
       const client = await this.prisma?.client.update({
         where: {
@@ -78,6 +81,34 @@ export class ClientService {
             "Something went wrong, please try again",
           );
         }
+      }
+    }
+  }
+
+  async delete(clientId: number, userId: number) {
+    try {
+      const deletedClient = await this.prisma.client.delete({
+        where: {
+          id: clientId,
+          userId, // Ensure the client belongs to the user
+        },
+      });
+
+      if (!deletedClient) {
+        throw new NotFoundException(
+          "Client not found or you are not authorized to delete it.",
+        );
+      }
+
+      return { message: "Client deleted successfully" };
+    } catch (error) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === "P2002"
+      ) {
+        throw new ForbiddenException("Client already exists");
+      } else {
+        throw new ForbiddenException("Something went wrong, please try again");
       }
     }
   }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -35,7 +36,16 @@ export class ClientController {
     const userId = (req.user as { id: number }).id;
     const clientIdNumber = parseInt(clientId, 10); // Convert to number
 
-    return this.clientService.update(dto, userId, clientIdNumber);
+    return this.clientService.update(dto, clientIdNumber, userId);
+  }
+
+  @UseGuards(AuthGuard("jwt"))
+  @Delete(":id")
+  deleteClient(@Param("id") clientId: string, @Req() req: Request) {
+    const userId = (req.user as { id: number }).id;
+    const clientIdNumber = parseInt(clientId, 10);
+
+    return this.clientService.delete(clientIdNumber, userId);
   }
 
   @UseGuards(AuthGuard("jwt"))
