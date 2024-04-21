@@ -29,7 +29,7 @@ export class ClientService {
         },
       });
 
-      return client; //on this line is getting error
+      return client;
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === "P2002") {
@@ -39,6 +39,24 @@ export class ClientService {
             "Something went wrong, please try again",
           );
         }
+      }
+    }
+  }
+
+  async list(userId: number, offset: number, limit: number) {
+    try {
+      const clients = await this.prisma?.client.findMany({
+        where: {
+          userId: userId,
+        },
+        skip: offset, // Skip the specified number of results
+        take: limit, // Limit the number of results
+      });
+
+      return clients;
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        throw new ForbiddenException("Something went wrong, please try again");
       }
     }
   }
