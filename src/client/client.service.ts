@@ -73,14 +73,13 @@ export class ClientService {
 
       return client;
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
-        if (error.code === "P2002") {
-          throw new ForbiddenException("Client already exists");
-        } else {
-          throw new ForbiddenException(
-            "Something went wrong, please try again",
-          );
-        }
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === "P2002"
+      ) {
+        throw new ForbiddenException("Client already exists");
+      } else {
+        throw new ForbiddenException("Something went wrong, please try again");
       }
     }
   }
