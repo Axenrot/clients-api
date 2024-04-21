@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { AuthDto } from "./dto";
+import { AuthRegisterDto, AuthLoginDto } from "./dto";
 import * as argon from "argon2";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { JwtService } from "@nestjs/jwt";
@@ -12,7 +12,7 @@ export class AuthService {
     private jwt: JwtService,
   ) {}
 
-  async signup(dto: AuthDto) {
+  async register(dto: AuthRegisterDto) {
     // generate password hash
     const hash = await argon.hash(dto.password);
 
@@ -22,11 +22,15 @@ export class AuthService {
         data: {
           email: dto.email,
           hash: hash,
+          firstName: dto.firstName || null,
+          lastName: dto.lastName || null,
         },
         select: {
           id: true,
           email: true,
           createdAt: true,
+          firstName: true,
+          lastName: true,
         },
       });
       return user;
@@ -43,7 +47,7 @@ export class AuthService {
     }
   }
 
-  async signin(dto: AuthDto) {
+  async login(dto: AuthLoginDto) {
     // find the user by email
     try {
       const user = await this.prisma.user.findFirstOrThrow({
@@ -71,6 +75,12 @@ export class AuthService {
         throw new ForbiddenException("Something went wrong, please try again");
       }
     }
+  }
+
+  async logout() {
+    // Remove JWT from local storage or cookies
+    localStorage.removeItem("access_token");
+    // Optionally redirect to login or home page
   }
 
   signToken(userId: number, email: string): Promise<string> {

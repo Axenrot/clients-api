@@ -7,10 +7,8 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class ClientService {
   constructor(private prisma: PrismaService) {}
 
-  async create(dto: ClientDto) {
-    console.log("create?");
+  async create(dto: ClientDto, userId: number) {
     try {
-      console.log("trying to create");
       const client = await this.prisma?.client.create({
         data: {
           email: dto.email,
@@ -18,7 +16,7 @@ export class ClientService {
           country: dto.country,
           address: dto.address,
           name: dto.name,
-          userId: 1,
+          userId,
         },
         select: {
           id: true,
@@ -30,12 +28,12 @@ export class ClientService {
           createdAt: true,
         },
       });
-      console.log(client);
-      return client;
+
+      return client; //on this line is getting error
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === "P2002") {
-          throw new ForbiddenException("CLient already exists");
+          throw new ForbiddenException("Client already exists");
         } else {
           throw new ForbiddenException(
             "Something went wrong, please try again",

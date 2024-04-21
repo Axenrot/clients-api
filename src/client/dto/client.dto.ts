@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty, IsString } from "class-validator";
 import { Title, Country } from "@prisma/client";
 
 export class ClientDto {
@@ -8,11 +8,11 @@ export class ClientDto {
   email: string;
 
   @IsNotEmpty()
-  @IsString()
+  @IsEnum(Title)
   title: Title;
 
   @IsNotEmpty()
-  @IsString()
+  @IsEnum(Country)
   country: Country;
 
   @IsNotEmpty()
