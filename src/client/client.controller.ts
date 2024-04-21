@@ -3,13 +3,13 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
-  Put,
   Req,
   UseGuards,
 } from "@nestjs/common";
 import { ClientService } from "./client.service";
-import { ClientDto } from "./dto";
+import { ClientDto, ClientPatchDto } from "./dto";
 import { AuthGuard } from "@nestjs/passport";
 import { Request } from "express";
 
@@ -26,11 +26,16 @@ export class ClientController {
   }
 
   @UseGuards(AuthGuard("jwt"))
-  @Put("update")
-  update(@Body() dto: ClientDto, @Req() req: Request) {
+  @Patch("update/:clientId")
+  update(
+    @Body() dto: ClientPatchDto,
+    @Req() req: Request,
+    @Param("clientId") clientId: string,
+  ) {
     const userId = (req.user as { id: number }).id;
+    const clientIdNumber = parseInt(clientId, 10); // Convert to number
 
-    return this.clientService.update(dto, userId, 3);
+    return this.clientService.update(dto, userId, clientIdNumber);
   }
 
   @UseGuards(AuthGuard("jwt"))

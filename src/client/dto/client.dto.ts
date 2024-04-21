@@ -1,4 +1,10 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsString } from "class-validator";
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from "class-validator";
 import { Title, Country } from "@prisma/client";
 
 export class ClientDto {
@@ -20,6 +26,29 @@ export class ClientDto {
   name: string;
 
   @IsNotEmpty()
+  @IsString()
+  address: string;
+}
+
+export class ClientPatchDto {
+  @IsOptional()
+  @IsEmail()
+  @IsString()
+  email: string;
+
+  @IsOptional()
+  @IsEnum(Title)
+  title: Title;
+
+  @IsOptional()
+  @IsEnum(Country)
+  country: Country;
+
+  @IsOptional()
+  @IsString()
+  name: string;
+
+  @IsOptional()
   @IsString()
   address: string;
 }

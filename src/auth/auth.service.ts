@@ -90,7 +90,7 @@ export class AuthService {
     };
 
     return this.jwt.signAsync(payload, {
-      expiresIn: "30m",
+      expiresIn: "300m",
       secret: process.env.JWT_SECRET,
     });
   }
