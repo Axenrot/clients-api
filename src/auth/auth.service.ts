@@ -59,6 +59,9 @@ export class AuthService {
         const token = await this.signToken(user.id, user.email);
         return {
           access_token: token,
+          id: user.id,
+          created_at: user.createdAt,
+          updated_at: user.updatedAt,
           email: user.email,
           first_name: user.firstName,
           last_name: user.lastName,

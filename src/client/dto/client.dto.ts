@@ -25,6 +25,10 @@ export class ClientDto {
   @IsString()
   name: string;
 
+  @IsOptional()
+  @IsString()
+  phone: string;
+
   @IsNotEmpty()
   @IsString()
   address: string;
@@ -47,6 +51,10 @@ export class ClientPatchDto {
   @IsOptional()
   @IsString()
   name: string;
+
+  @IsOptional()
+  @IsString()
+  phone: string;
 
   @IsOptional()
   @IsString()
