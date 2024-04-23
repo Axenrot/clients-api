@@ -114,13 +114,23 @@ export class ClientService {
     }
   }
 
-  async list(userId: number, offset: number, limit: number) {
+  async list(
+    userId: number,
+    offset: number,
+    limit: number,
+    searchQuery?: string,
+  ) {
     try {
+      const whereClause = {
+        userId: userId,
+        ...(searchQuery && {
+          OR: [{ name: { contains: searchQuery, mode: "insensitive" } }],
+        }),
+      } as any;
+
       if (typeof offset == "number" && typeof limit == "number") {
         const clients = await this.prisma?.client.findMany({
-          where: {
-            userId: userId,
-          },
+          where: whereClause,
           skip: offset, // Skip the specified number of results
           take: limit, // Limit the number of results
         });
@@ -130,9 +140,7 @@ export class ClientService {
 
       // this returns all if we don't pass offset or limit
       const clients = await this.prisma?.client.findMany({
-        where: {
-          userId: userId,
-        },
+        where: whereClause,
       });
 
       return clients;

@@ -52,16 +52,14 @@ export class ClientController {
   @Get("list")
   list(@Req() req: Request) {
     const userId = (req.user as { id: number }).id;
+    const offset = req.query.offset
+      ? parseInt(req.query.offset as string, 10)
+      : undefined;
+    const limit = req.query.limit
+      ? parseInt(req.query.limit as string, 10)
+      : undefined;
+    const searchQuery = req.query.search as string | undefined; // Retrieve search query
 
-    // this returns all if we don't pass offset or limit
-    const offset =
-      req.query.offset != undefined
-        ? parseInt(req.query.offset as string, 10)
-        : null;
-    const limit =
-      req.query.offset != undefined
-        ? parseInt(req.query.limit as string, 10)
-        : null;
-    return this.clientService.list(userId, offset, limit);
+    return this.clientService.list(userId, offset, limit, searchQuery);
   }
 }
