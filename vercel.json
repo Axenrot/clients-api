@@ -14,10 +14,9 @@
       "src": "/*",
       "dest": "src/main.ts",
       "methods": ["GET", "POST", "PUT", "PATCH", "DELETE"],
-      "proxy": {
-        "target": "http://localhost:8000",
-        "changeOrigin": true,
-        "pathRewrite": { "^/": "" }
+      "rewrite": {
+        "destination": "http://localhost:8000",
+        "permanent": false
       }
     }
   ]
