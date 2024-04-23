@@ -13,11 +13,7 @@
     {
       "src": "/*",
       "dest": "src/main.ts",
-      "methods": ["GET", "POST", "PUT", "PATCH", "DELETE"],
-      "rewrite": {
-        "destination": "http://localhost:8000",
-        "permanent": false
-      }
+      "methods": ["GET", "POST", "PUT", "PATCH", "DELETE"]
     }
   ]
 }
