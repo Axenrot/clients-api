@@ -2,18 +2,17 @@
   "version": 2,
   "builds": [
     {
-      "src": "dist/main",
-      "use": "@vercel/static-build",
+      "src": "app.js",
+      "use": "@vercel/node",
       "config": {
-        "distDir": "dist"
+        "includeFiles": ["dist/**"]
       }
     }
   ],
   "routes": [
     {
-      "src": "/*",
-      "dest": "src/main.ts",
-      "methods": ["GET", "POST", "PUT", "PATCH", "DELETE"]
+      "src": "/(.*)",
+      "dest": "app.js"
     }
   ]
 }
