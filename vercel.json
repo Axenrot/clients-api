@@ -12,7 +12,8 @@
   "routes": [
     {
       "src": "/*",
-      "dest": "index.html"
+      "dest": "src/main.ts",
+      "methods": ["GET", "POST", "PUT", "PATCH", "DELETE"]
     }
   ]
 }
